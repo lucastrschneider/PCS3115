@@ -40,8 +40,8 @@ begin
         report "BOOT";
         finished <= false;
 
-        for dividendo_n in 0 to 50 loop-- 65535 loop
-            for divisor_n in 0 to 50 loop--65535 loop
+        for divisor_n in 0 to 65535 loop
+            for dividendo_n in 0 to 4 loop
                 dividendo <= bit_vector(to_unsigned(dividendo_n,16));
                 divisor <= bit_vector(to_unsigned(divisor_n,16));
                 if (divisor_n = 0) then
@@ -53,20 +53,12 @@ begin
 
                 inicio <= '1';
 
-                wait on fim for 200000 ns
+                wait until fim='1' for 200000 ns;
 
-                times_up <= false;
-                time_passed <= 0 ns;
-                while (fim = '0') loop
-                    if (time_passed > PERIOD * 200000) then
-                        times_up <= true;
-                        exit;
-                    end if;
-                    wait for 1 ns;
-                    time_passed <= time_passed + (1 ns);
-                end loop;
+                inicio <= '0';
+                wait for 500 ps;
 
-                if (times_up) then
+                if (fim = '0') then
                     report
                         "Max time exceded on "&
                         "dividendo: "&integer'image(to_integer(unsigned(dividendo))) &" "&
@@ -79,10 +71,16 @@ begin
                         "Error "&
                         "dividendo: "&integer'image(to_integer(unsigned(dividendo))) &" "&
                         "divisor: "&integer'image(to_integer(unsigned(divisor))) &" "&
-                        "desto: "&integer'image(to_integer(unsigned(resto_out))) &" "&
+                        "resto: "&integer'image(to_integer(unsigned(resto_out))) &" "&
                         "expected: "&integer'image(resto_n)
                     severity failure;
+--                    report "SUCESS: "&
+  --                      integer'image(to_integer(unsigned(dividendo))) &" mod "&
+    --                    integer'image(to_integer(unsigned(divisor))) &" = "&
+      --                  integer'image(to_integer(unsigned(resto_out)));
                 end if;
+
+                wait for 1 ns;
             end loop;
         end loop;
         

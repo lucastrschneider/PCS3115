@@ -22,27 +22,33 @@ architecture resto_arch of resto is
     type state_t is (IDLE, CHECK, COMPARE, SUBTRACT, OVER);
     signal actual_state, next_state : state_t;
     signal divisor_nulo, resto_menor : bit;
-    signal minuendo, subtraction_result, aux_rest : bit_vector(15 downto 0);
+    signal aux_rest : bit_vector(15 downto 0);
 
 begin
+--    DEBUG: process(clock)
+  --  begin
+    --    report "State: "&state_t'image(actual_state);
+      --  if (actual_state = CHECK) then report "aux_rest CHECK value: "&integer'image(to_integer(unsigned(aux_rest)));
+        --elsif (actual_state = COMPARE) then report "aux_rest COMP value: "&integer'image(to_integer(unsigned(aux_rest)));
+        --end if;
+
+        --report "resto_menor flag: "&bit'image(resto_menor);
+    --end process DEBUG;
+
     ESTADO_ATUAL: process(reset, clock)
     begin
         if (reset = '1') then actual_state <= IDLE;
         elsif (rising_edge(clock)) then actual_state <= next_state;
         end if;
+
     end process ESTADO_ATUAL;
 
-    -- VALORES PARA SUBTRATOR
-    minuendo <= dividendo when (actual_state = CHECK) else
-                aux_rest when (actual_state = SUBTRACT) else
-                minuendo;
-    
-    aux_rest <=    dividendo when (actual_state = CHECK) else
-                subtraction_result when (actual_state = COMPARE) else
-                aux_rest;
-
-    subtraction_result <= bit_vector(unsigned(minuendo) - unsigned(divisor));   --PRECISA MUDAR
-    
+    SUBTRAIR: process(actual_state) 
+    begin
+        if (actual_state = CHECK) then aux_rest <= dividendo;
+        elsif (actual_state = SUBTRACT) then aux_rest <= bit_vector(unsigned(aux_rest) - unsigned(divisor));
+        end if;
+    end process SUBTRAIR;    
 
     -- FLAGS PARA CALCULAR PROXIMO ESTADO --
     divisor_nulo <= '1' when (divisor = "0000000000000000") else '0';
