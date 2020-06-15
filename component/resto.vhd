@@ -43,6 +43,10 @@ begin
         elsif (rising_edge(clock)) then actual_state <= next_state;
         end if;
     end process STATE_MEMORY;
+    
+    -- FLAGS PARA CALCULAR PROXIMO ESTADO --
+    divisor_nulo <= (unsigned(divisor) = 0);
+    resto_menor <= (unsigned(resto_aux) < unsigned(divisor));
 
     NEXT_STATE_LOGIC: process(inicio, actual_state)
     begin
@@ -67,10 +71,6 @@ begin
             when others =>      next_state <= IDLE;
         end case;
     end process NEXT_STATE_LOGIC;
-
-    -- FLAGS PARA CALCULAR PROXIMO ESTADO --
-    divisor_nulo <= (divisor = "0000000000000000");
-    resto_menor <= (unsigned(resto_aux) < unsigned(divisor));
 
     -- CALCULA A SAIDA
     fim <= '1' when (actual_state = OVER) else '0';

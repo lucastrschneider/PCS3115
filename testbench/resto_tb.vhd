@@ -52,9 +52,7 @@ begin
                     
 
                 inicio <= '1';
-
                 wait until fim = '1' for 200000 ns;
-
                 inicio <= '0';
 
                 if (fim = '0') then
