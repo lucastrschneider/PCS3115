@@ -24,6 +24,7 @@ architecture resto_arch of resto is
     signal actual_state : state_t := IDLE;
     signal next_state : state_t := IDLE;
     signal resto_aux : bit_vector(15 downto 0) := dividendo;
+    signal minuendo : bit_vector(15 downto 0) := dividendo;
     signal divisor_nulo : boolean := true;
     signal resto_menor : boolean := false;
 
@@ -51,9 +52,12 @@ begin
             when COMPARE =>     if (unsigned(resto_aux) < unsigned(divisor)) then next_state <= OVER;
                                 else next_state <= SUBTRACT;
                                 end if;
+                                --ACTION--
+                                minuendo <= resto_aux;
+                                
             when SUBTRACT =>    next_state <= COMPARE;
                                 --ACTION--
-                                resto_aux <= bit_vector(unsigned(resto_aux) - unsigned(divisor));
+                                resto_aux <= bit_vector(unsigned(minuendo) - unsigned(divisor));
 
             when OVER =>        next_state <= IDLE;
             when others =>      next_state <= IDLE;
