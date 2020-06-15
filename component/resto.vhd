@@ -3,6 +3,7 @@
 --! @brief 16-bit rest of division calculator
 --! @author Lucas Schneider (lucastrschneider@usp.br)
 --! @date 2020/06/14
+--! Last submition: #177 
 --------------------------------------------------------------------------------
 
 library ieee;
@@ -20,55 +21,59 @@ end entity;
 
 architecture resto_arch of resto is
     type state_t is (IDLE, CHECK, COMPARE, SUBTRACT, OVER);
-    signal actual_state, next_state : state_t;
-    signal divisor_nulo, resto_menor : bit;
-    signal aux_rest : bit_vector(15 downto 0);
+    signal actual_state : state_t := IDLE;
+    signal next_state : state_t := IDLE;
+    signal resto_aux : bit_vector(15 downto 0) := dividendo;
+    signal divisor_nulo : boolean := true;
+    signal resto_menor : boolean := false;
 
 begin
 --    DEBUG: process(clock)
-  --  begin
-    --    report "State: "&state_t'image(actual_state);
-      --  if (actual_state = CHECK) then report "aux_rest CHECK value: "&integer'image(to_integer(unsigned(aux_rest)));
-        --elsif (actual_state = COMPARE) then report "aux_rest COMP value: "&integer'image(to_integer(unsigned(aux_rest)));
-        --end if;
+--    begin
+--        report "State: "&state_t'image(actual_state);
+--        if (actual_state = CHECK) then report "resto_aux CHECK value: "&integer'image(to_integer(unsigned(resto_aux)));
+--        elsif (actual_state = COMPARE) then report "resto_aux COMP value: "&integer'image(to_integer(unsigned(resto_aux)));
+--        end if;
+--        report "resto_menor flag: "&boolean'image(resto_menor);
+--    end process DEBUG;
 
-        --report "resto_menor flag: "&bit'image(resto_menor);
-    --end process DEBUG;
-
-    ESTADO_ATUAL: process(reset, clock)
+    STATE_MEMORY: process(reset, clock)
     begin
         if (reset = '1') then actual_state <= IDLE;
         elsif (rising_edge(clock)) then actual_state <= next_state;
         end if;
+    end process STATE_MEMORY;
 
-    end process ESTADO_ATUAL;
-
-    SUBTRAIR: process(actual_state) 
+    NEXT_STATE_LOGIC: process(inicio, actual_state)
     begin
-        if (actual_state = CHECK) then aux_rest <= dividendo;
-        elsif (actual_state = SUBTRACT) then aux_rest <= bit_vector(unsigned(aux_rest) - unsigned(divisor));
-        end if;
-    end process SUBTRAIR;    
+        case actual_state is
+            when IDLE =>        if (inicio = '1') then next_state <= CHECK;
+                                else next_state <= IDLE;
+                                end if;                
+            when CHECK =>       if (divisor_nulo) then next_state <= OVER;
+                                else next_state <= COMPARE;
+                                end if;
+                                --ACTION--
+                                resto_aux <= dividendo;
+
+            when COMPARE =>     if (resto_menor) then next_state <= OVER;
+                                else next_state <= SUBTRACT;
+                                end if;
+            when SUBTRACT =>    next_state <= COMPARE;
+                                --ACTION--
+                                resto_aux <= bit_vector(unsigned(resto_aux) - unsigned(divisor));
+
+            when OVER =>        next_state <= IDLE;
+            when others =>      next_state <= IDLE;
+        end case;
+    end process NEXT_STATE_LOGIC;
 
     -- FLAGS PARA CALCULAR PROXIMO ESTADO --
-    divisor_nulo <= '1' when (divisor = "0000000000000000") else '0';
-    resto_menor <= '1' when (unsigned(aux_rest) < unsigned(divisor)) else '0';     --PRECISA MUDAR
-
-    next_state <=   IDLE when ((actual_state = IDLE) and (inicio = '0')) else
-                    CHECK when ((actual_state = IDLE) and (inicio = '1')) else
-                    COMPARE when ((actual_state = CHECK) and (divisor_nulo = '0')) else
-                    COMPARE when (actual_state = SUBTRACT) else
-                    SUBTRACT when ((actual_state = COMPARE) and (resto_menor = '0')) else
-                    IDLE when ((actual_state = COMPARE) and (resto_menor = '1')) else
-                    IDLE when ((actual_state = CHECK) and (divisor_nulo = '1')) else
-                    IDLE;
+    divisor_nulo <= (divisor = "0000000000000000");
+    resto_menor <= (unsigned(resto_aux) < unsigned(divisor));
 
     -- CALCULA A SAIDA
-    fim <=  '1' when ((actual_state = COMPARE) and (resto_menor = '1')) else
-            '1' when ((actual_state = CHECK) and (divisor_nulo = '1')) else
-            '0';
-
-    resto <= aux_rest; --when (fim = '1') else
-                --(others => '0');
+    fim <= '1' when (actual_state = OVER) else '0';
+    resto <= resto_aux;
                     
 end resto_arch;

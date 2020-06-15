@@ -40,8 +40,8 @@ begin
         report "BOOT";
         finished <= false;
 
-        for divisor_n in 0 to 65535 loop
-            for dividendo_n in 0 to 4 loop
+        for dividendo_n in 35530 to 35535 loop
+            for divisor_n in 0 to 9 loop
                 dividendo <= bit_vector(to_unsigned(dividendo_n,16));
                 divisor <= bit_vector(to_unsigned(divisor_n,16));
                 if (divisor_n = 0) then
@@ -53,16 +53,15 @@ begin
 
                 inicio <= '1';
 
-                wait until fim='1' for 200000 ns;
+                wait until fim = '1' for 200000 ns;
 
                 inicio <= '0';
-                wait for 500 ps;
 
                 if (fim = '0') then
                     report
                         "Max time exceded on "&
-                        "dividendo: "&integer'image(to_integer(unsigned(dividendo))) &" "&
-                        "divisor: "&integer'image(to_integer(unsigned(divisor)))
+                        integer'image(to_integer(unsigned(dividendo))) &" mod "&
+                        integer'image(to_integer(unsigned(divisor)))
                     severity failure;
 
                 else
@@ -74,10 +73,10 @@ begin
                         "resto: "&integer'image(to_integer(unsigned(resto_out))) &" "&
                         "expected: "&integer'image(resto_n)
                     severity failure;
---                    report "SUCESS: "&
-  --                      integer'image(to_integer(unsigned(dividendo))) &" mod "&
-    --                    integer'image(to_integer(unsigned(divisor))) &" = "&
-      --                  integer'image(to_integer(unsigned(resto_out)));
+                    report "SUCESS: "&
+                        integer'image(to_integer(unsigned(dividendo))) &" mod "&
+                        integer'image(to_integer(unsigned(divisor))) &" = "&
+                        integer'image(to_integer(unsigned(resto_out)));
                 end if;
 
                 wait for 1 ns;
