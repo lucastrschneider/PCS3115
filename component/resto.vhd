@@ -28,14 +28,6 @@ architecture resto_arch of resto is
     signal resto_menor : boolean := false;
 
 begin
---    DEBUG: process(clock)
---    begin
---        report "State: "&state_t'image(actual_state);
---        if (actual_state = CHECK) then report "resto_aux CHECK value: "&integer'image(to_integer(unsigned(resto_aux)));
---        elsif (actual_state = COMPARE) then report "resto_aux COMP value: "&integer'image(to_integer(unsigned(resto_aux)));
---        end if;
---        report "resto_menor flag: "&boolean'image(resto_menor);
---    end process DEBUG;
 
     STATE_MEMORY: process(reset, clock)
     begin
