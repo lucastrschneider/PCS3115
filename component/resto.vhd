@@ -43,10 +43,6 @@ begin
         elsif (rising_edge(clock)) then actual_state <= next_state;
         end if;
     end process STATE_MEMORY;
-    
-    -- FLAGS PARA CALCULAR PROXIMO ESTADO --
-    divisor_nulo <= (unsigned(divisor) = 0);
-    resto_menor <= (unsigned(resto_aux) < unsigned(divisor));
 
     NEXT_STATE_LOGIC: process(inicio, actual_state)
     begin
@@ -54,13 +50,13 @@ begin
             when IDLE =>        if (inicio = '1') then next_state <= CHECK;
                                 else next_state <= IDLE;
                                 end if;                
-            when CHECK =>       if (divisor_nulo) then next_state <= OVER;
+            when CHECK =>       if (unsigned(divisor) = 0) then next_state <= OVER;
                                 else next_state <= COMPARE;
                                 end if;
                                 --ACTION--
                                 resto_aux <= dividendo;
 
-            when COMPARE =>     if (resto_menor) then next_state <= OVER;
+            when COMPARE =>     if (unsigned(resto_aux) < unsigned(divisor)) then next_state <= OVER;
                                 else next_state <= SUBTRACT;
                                 end if;
             when SUBTRACT =>    next_state <= COMPARE;
