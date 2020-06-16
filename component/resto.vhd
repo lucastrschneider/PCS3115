@@ -36,28 +36,6 @@ begin
         end if;
     end process;
 
---    DIVISOR_0: process(clock)
---    begin
---        if (falling_edge(clock)) then
---            if (unsigned(divisor) = 0) then
---                divisor_nulo <= '1';
---            else
---                divisor_nulo <= '0';
---            end if;
---        end if;
---    end process;
-
---    RESTO_MENOR: process(clock)
---    begin
---        if (falling_edge(clock)) then
---            if (unsigned(resto_interno) < unsigned(divisor)) then
---                resto_menor_divisor <= '1';
---            else
---                resto_menor_divisor <= '0';
---            end if;
---        end if;
---    end process;
-
     divisor_nulo <= '1' when (unsigned(divisor) = 0) else '0';
     resto_menor_divisor <= '1' when (unsigned(resto_interno) < unsigned(divisor)) else '0';
 
