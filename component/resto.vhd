@@ -8,8 +8,6 @@
 library ieee;
 use ieee.numeric_bit.all;
 
---------------------------------------------------------------------------------
-
 entity restoDF is
     port (
         clock : in bit;
@@ -131,6 +129,9 @@ begin
 end architecture;
 
 --------------------------------------------------------------------------------
+
+library ieee;
+use ieee.numeric_bit.all;
 
 entity resto is
     port (
