@@ -40,8 +40,8 @@ begin
         report "BOOT";
         finished <= false;
 
-        for dividendo_n in 0 to 1000 loop--in 35533 to 35535 loop
-            for divisor_n in 0 to 1000 loop--in 0 to 9 loop
+        for dividendo_n in 0 to 100 loop--in 35533 to 35535 loop
+            for divisor_n in 0 to 100 loop--in 0 to 9 loop
                 dividendo <= bit_vector(to_unsigned(dividendo_n,16));
                 divisor <= bit_vector(to_unsigned(divisor_n,16));
                 if (divisor_n = 0) then
