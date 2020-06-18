@@ -175,11 +175,14 @@ architecture log2FD_arch of log2FD is
     signal reg_8bit_control : bit_vector(1 downto 0);
     signal N_shift : bit_vector(7 downto 0);
     signal sum, result_interno : bit_vector(3 downto 0);
+    signal set_l_4 : bit;
 
 begin
     REG8: shift_reg_8bit port map(clock, reg_8bit_control, '0', '0', '1', '1', N, N_shift);
-    REG4: register_4bit port map(clock, load_4, set_4, '1', sum, result_interno);
+    REG4: register_4bit port map(clock, load_4, set_l_4, '1', sum, result_interno);
     ADDER: adder_4bit port map(result_interno, "0001", '0', sum, open, open);
+
+    set_l_4 <= not set_4;
 
     reg_8bit_control <= "01" when (load_8 = '1') else
                         "10" when (shift_8 = '1') else
@@ -238,7 +241,7 @@ begin
     shift_8 <= '1' when (actual_state = SHIFT) else '0';
     load_8 <= '1' when (actual_state = INIT) else '0';
     load_4 <= '1' when (actual_state = SHIFT) else '0';
-    set_4 <= '1' when (actual_state = CHECK) else '0';
+    set_4 <= '1' when (actual_state = INIT) else '0';
 
 end architecture;
 
