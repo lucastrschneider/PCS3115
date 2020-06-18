@@ -3,7 +3,7 @@
 --! @brief 8-bit log base 2 calculator
 --! @author Lucas Schneider (lucastrschneider@usp.br)
 --! @date 2020/06/17
---! Last submition: 
+--! Last submition: #316 (VHDL elaboration error)
 --------------------------------------------------------------------------------
 
 library ieee;
@@ -18,7 +18,7 @@ entity shift_reg_8bit is
         D : in bit_vector(7 downto 0);
         Q : out bit_vector(7 downto 0)
     );
-end entity;
+end entity shift_reg_8bit;
 
 architecture shift_reg_8bit_arch of shift_reg_8bit is
     signal IQ : bit_vector(7 downto 0) := (others => '0');
@@ -38,7 +38,7 @@ begin
         end if;
         Q <= IQ;
     end process;
-end architecture;
+end architecture shift_reg_8bit_arch;
 
 --------------------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ entity register_4bit is
         D : in bit_vector(3 downto 0);
         Q : out bit_vector(3 downto 0)
     );
-end entity;
+end entity register_4bit;
 
 architecture register_4bit_arch of register_4bit is
 
@@ -70,7 +70,7 @@ begin
         end if;
         Q <= IQ;
     end process;
-end architecture;
+end architecture register_4bit_arch;
 
 --------------------------------------------------------------------------------
 
@@ -102,7 +102,7 @@ entity adder_4bit is
         sum : out bit_vector(3 downto 0);
         Cout, Ov : out bit
     );
-end entity;
+end entity adder_4bit;
 
 architecture adder_4bit_arch of adder_4bit is
     component full_adder is 
@@ -123,7 +123,7 @@ begin
     Cout <= carry(3);
     Ov <= carry(3) xor carry(2);
     sum <= sum_value;
-end architecture;
+end architecture adder_4bit_arch;
 
 --------------------------------------------------------------------------------
 
@@ -139,7 +139,7 @@ entity log2FD is
         zero_f : out bit --status
 
     );
-end entity;
+end entity log2FD;
 
 architecture log2FD_arch of log2FD is
     component shift_reg_8bit is 
@@ -191,7 +191,7 @@ begin
     zero_f <= '1' when (unsigned(N_shift) = 0) else '0';
     result <= result_interno;
 
-end architecture;
+end architecture log2FD_arch;
 
 --------------------------------------------------------------------------------
 
@@ -206,7 +206,7 @@ entity log2UC is
         shift_8, load_8, load_4, set_4 : out bit; --controle
         ready : out bit --saida de controle
     );
-end entity;
+end entity log2UC;
 
 architecture log2UC_arch of log2UC is
     type state_t is (IDLE, INIT, CHECK, SHIFT, OVER);
@@ -243,7 +243,7 @@ begin
     load_4 <= '1' when (actual_state = SHIFT) else '0';
     set_4 <= '1' when (actual_state = INIT) else '0';
 
-end architecture;
+end architecture log2UC_arch;
 
 --------------------------------------------------------------------------------
 
@@ -306,4 +306,4 @@ begin
     ready <= ready_interno;
     logval <= logval_interno;
 
-end architecture;
+end architecture log2_arch;
