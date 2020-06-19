@@ -149,7 +149,6 @@ entity log2FD is
         result : out bit_vector(3 downto 0); --saida de dados
         shift_8, load_8, load_4, set_4 : in bit; --controle
         zero_f : out bit --status
-
     );
 end entity log2FD;
 
@@ -284,7 +283,6 @@ architecture log2_arch of log2 is
             result : out bit_vector(3 downto 0); --saida de dados
             shift_8, load_8, load_4, set_4 : in bit; --controle
             zero_f : out bit --status
-
         );
     end component;
 
@@ -316,7 +314,8 @@ begin
                         zero_f);
     UC: log2UC port map (clock,
                         reset, start,
-                        zero_f, shift_8, load_8, load_4, set_4,
+                        zero_f,
+                        shift_8, load_8, load_4, set_4,
                         ready_interno);
 
     ready <= ready_interno;
