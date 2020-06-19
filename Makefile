@@ -22,7 +22,7 @@ TB_TARGETS		:= $(wildcard $(TB_DIR)/*.vhd)
 ALL_TARGETS		:= $(CPNT_TARGETS) $(TB_TARGETS)
 
 # Name of the component to be tested
-CPNT ?= mux_4t1
+CPNT ?= turbo
 
 # Default values, can be set on the command line or here
 DEBUG	?= 1
