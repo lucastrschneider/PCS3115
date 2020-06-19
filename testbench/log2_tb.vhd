@@ -10,9 +10,9 @@ use ieee.numeric_bit.all;
 use ieee.math_real.all;
 
 entity log2_tb is
-end log2_tb;
+end entity log2_tb;
 
-architecture dut of log2_tb is
+architecture log2_tb_arch of log2_tb is
     component log2 is
     port (
         clock, reset: in bit;				-- Sinais de controle globais: clock e reset (para reiniciar)
@@ -68,6 +68,7 @@ begin
 --                        ". Obtido: "&integer'image(logval_int)
 --                        severity note;
 --                end if;
+
             end if;
         end loop;
 
@@ -75,4 +76,4 @@ begin
         report "EOT";
         wait;
     end process;
-end architecture;
+end architecture log2_tb_arch;
