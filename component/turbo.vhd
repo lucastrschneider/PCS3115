@@ -2,7 +2,7 @@
 --! @file turbo.vhd
 --! @brief Turbo controller
 --! @author Lucas Schneider (lucastrschneider@usp.br)
---! @date 2020/06/17
+--! @date 2020/06/20
 --! Last submition:
 --------------------------------------------------------------------------------
 
@@ -31,14 +31,11 @@ begin
         if (reset_l = '0') then IQ <= (others => '0');
         elsif (set_l = '0') then IQ <= (others => '1');
         elsif (rising_edge(clock)) then
-            case S is
-                when '0' => null;       --HOLD
-                when '1' => IQ <= D;    --LOAD
-                when others => null;
-            end case;
+            if (S = '1') then IQ <= D;
+            end if;
         end if;
-        Q <= IQ;
     end process;
+    Q <= IQ;
 end architecture reg_8bit_arch;
 
 --------------------------------------------------------------------------------
@@ -81,7 +78,7 @@ entity counter_4bit is
 end entity counter_4bit;
 
 architecture counter_4bit_arch of counter_4bit is
-    signal IQ : unsigned (3 downto 0);
+    signal IQ : unsigned (3 downto 0) := "0000";
 begin
     process (clock, reset_l) is
     begin
@@ -92,8 +89,8 @@ begin
                 IQ <= IQ + 1;
             end if;
         end if;
-        Q <= bit_vector(IQ);
     end process;
+    Q <= bit_vector(IQ);
 end architecture counter_4bit_arch;
 
 --------------------------------------------------------------------------------
