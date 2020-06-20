@@ -33,7 +33,7 @@ begin
 
     DUT: turbo port map (clock, reset, button, sensib, cmd);
 
-    sensib <= "0010";
+    sensib <= "0001";
 
     MAIN: process
     begin
@@ -44,21 +44,28 @@ begin
 
         wait for 2 ns;
 
-        button <= "00000100";
+        button <= "00000001";
 
         wait for 40 ns;
 
-        button <= "00000001";
+        button <= "00000010";
 
         wait for 10 ns;
 
-        button <= "10000000";
+        reset <= '1';
+        button <= "00000011";
 
         wait for 30 ns;
 
-        button <= "00000000";
+        reset <= '0';
+
+        wait for 40 ns;
+
+        button <= "00000100";
 
         wait for 50 ns;
+
+        button <= "00000101";
 
         finished <= true;
         report "EOT";

@@ -3,7 +3,7 @@
 --! @brief Turbo controller
 --! @author Lucas Schneider (lucastrschneider@usp.br)
 --! @date 2020/06/20
---! Last submition:
+--! Last submition: #334 (Elaboration Error)
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -201,10 +201,11 @@ begin
         end if;
     end process STATE_MEMORY;
 
-    NEXT_STATE_LOGIC: process(actual_state, push, zero_f, hold_down)
+    NEXT_STATE_LOGIC: process(actual_state, reset, push, zero_f, hold_down)
     begin
         case actual_state is
-            when INIT =>        if (push = '1') then next_state <= PULSE;
+            when INIT =>        if (reset = '1') then next_state <= INIT;
+                                elsif (push = '1') then next_state <= PULSE;
                                 else next_state <= INIT;
                                 end if;
 
