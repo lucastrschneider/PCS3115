@@ -3,7 +3,7 @@
 --! @brief Turbo controller
 --! @author Lucas Schneider (lucastrschneider@usp.br)
 --! @date 2020/06/20
---! Last submition: #334 (Elaboration Error)
+--! Last submition: #335 (10/10)
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
