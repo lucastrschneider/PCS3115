@@ -40,8 +40,8 @@ begin
                 when others => null;
             end case;
         end if;
-        Q <= IQ;
     end process;
+    Q <= IQ;
 end architecture shift_reg_8bit_arch;
 
 --------------------------------------------------------------------------------
@@ -74,8 +74,8 @@ begin
             else null;
             end if;
         end if;
-        Q <= IQ;
     end process;
+    Q <= IQ;
 end architecture register_4bit_arch;
 
 --------------------------------------------------------------------------------
