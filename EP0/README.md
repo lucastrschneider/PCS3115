@@ -1,3 +1,3 @@
 # EP0 - ULA
 
-Exercício programa simulado.
+Descrição em VHDL de uma ULA simples de 4 bits.
