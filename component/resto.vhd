@@ -3,6 +3,7 @@
 --! @brief 16-bit rest of division calculator
 --! @author Lucas Schneider (lucastrschneider@usp.br)
 --! @date 2020/06/14
+--! Last submition: #270
 --------------------------------------------------------------------------------
 
 library ieee;
@@ -80,7 +81,7 @@ begin
         end if;
     end process STATE_MEMORY;
 
-    NEXT_STATE_LOGIC: process(inicio, actual_state)
+    NEXT_STATE_LOGIC: process(actual_state, inicio, resto_menor_divisor, divisor_nulo)
     begin
         case actual_state is
             when IDLE =>        if (inicio = '1') then next_state <= INIT;
