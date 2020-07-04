@@ -9,20 +9,22 @@
 ## Input files
 ###############################################################################
 
+# EP to work with
+EP ?= EP0
+
+include $(EP)/description.mk
+
 # Build directory
-WORK_DIR := work
+WORK_DIR := $(EP)/work
 
 # Source directories
-CPNT_DIR := component
-TB_DIR := testbench
+CPNT_DIR := $(EP)/component
+TB_DIR := $(EP)/testbench
 
 # Source Files
-CPNT_TARGETS	:= $(wildcard $(CPNT_DIR)/*.vhd)
+CPNT_TARGETS	:= $(addprefix $(CPNT_DIR)/, $(addsuffix .vhd, $(CPNT_LIST)))
 TB_TARGETS		:= $(wildcard $(TB_DIR)/*.vhd)
 ALL_TARGETS		:= $(CPNT_TARGETS) $(TB_TARGETS)
-
-# Name of the component to be tested
-CPNT ?= alu
 
 # Default values, can be set on the command line or here
 DEBUG	?= 1
@@ -68,6 +70,8 @@ clean:
 $(WORK_DIR):
 	$(AT)mkdir -p $(WORK_DIR)
 
+print:
+	@echo $(CPNT_LIST) "\n"$(CPNT_TARGETS) "\n"$(TB_TARGETS)
 
 # Tests
 test: | $(WORK_DIR)
