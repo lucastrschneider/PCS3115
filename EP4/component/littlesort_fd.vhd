@@ -199,7 +199,7 @@ begin
 end architecture comp_4bit_arch;
 
 -------------------------------------------------------
---! @brief Block 2 of little sort (daeals with comparing data)
+--! @brief Block 1 of little sort (adrress generation and memory write)
 --! @author Lucas Schneider <lucastrschneider@usp.br>
 --! @date 2020-07-07
 -------------------------------------------------------
@@ -269,7 +269,7 @@ begin
 end architecture littlesort_b1_arch ; -- littlesort_b1_arch
 
 -------------------------------------------------------
---! @brief Block 2 of little sort (daeals with comparing data)
+--! @brief Block 2 of little sort (data storage and comparison)
 --! @author Lucas Schneider <lucastrschneider@usp.br>
 --! @date 2020-07-07
 -------------------------------------------------------
