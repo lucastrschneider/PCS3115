@@ -1,18 +1,23 @@
 # Name: Makefile
 # Author: Lucas Haug
 # Author: Lucas Schneider
-# 06/2020
+# 07/2020
 
 # Makefile for VHDL projects
 
 ###############################################################################
-## Input files
+## Project specification
 ###############################################################################
 
-# EP to work with
+# Current project folder
 EP ?= EP4
 
+# Include the project specif information
 include $(EP)/description.mk
+
+###############################################################################
+## Input files
+###############################################################################
 
 # Build directory
 WORK_DIR := $(EP)/work
@@ -82,6 +87,6 @@ endif
 
 ###############################################################################
 
-.PHONY: analyse check_syntax clean test
+.PHONY: analyse check_syntax clean print test
 
 .DEFAULT_GOAL := analyse
