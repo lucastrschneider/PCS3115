@@ -6,4 +6,4 @@
 CPNT_LIST := alu
 
 # Name of the component to be tested
-CPTN ?= alu
+CPNT ?= alu

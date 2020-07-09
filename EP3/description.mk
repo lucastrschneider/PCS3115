@@ -6,4 +6,4 @@
 CPNT_LIST := turbo
 
 # Name of the component to be tested
-CPTN ?= turbo
+CPNT ?= turbo

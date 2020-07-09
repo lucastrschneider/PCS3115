@@ -6,4 +6,4 @@
 CPNT_LIST := log2
 
 # Name of the component to be tested
-CPTN ?= log2
+CPNT ?= log2
