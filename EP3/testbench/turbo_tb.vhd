@@ -7,7 +7,7 @@
 
 library ieee;
 use ieee.numeric_bit.all;
-use ieee.math_real.all;
+use std.textio.all;
 
 entity turbo_tb is
 end entity turbo_tb;
@@ -26,46 +26,62 @@ architecture turbo_tb_arch of turbo_tb is
     signal button, cmd : bit_vector (7 downto 0) := (others => '0');
     signal sensib : bit_vector (3 downto 0);
 
-    constant PERIOD : time := 10 ns;
+    constant PERIOD : time := 1 ns;
 	signal finished : boolean := false;
 begin
     clock <= not clock after PERIOD/2 when not finished else '0';
 
     DUT: turbo port map (clock, reset, button, sensib, cmd);
 
-    sensib <= "0001";
-
     MAIN: process
+        file tb_file : text open read_mode is "EP3/turbo_tb.dat";
+        variable tb_line: line;
+        variable space: character;
+        variable sensib_v : bit_vector(3 downto 0);
+        variable button_v, cmd_v : bit_vector(7 downto 0);
+        variable counter : integer := 0;
     begin
         report "BOT";
         finished <= false;
 
-        wait for 20 ns;
-
-        wait for 2 ns;
-
-        button <= "00000001";
-
-        wait for 40 ns;
-
-        button <= "00000010";
-
-        wait for 10 ns;
-
+        wait for PERIOD*2;
         reset <= '1';
-        button <= "00000011";
-
-        wait for 30 ns;
-
+        wait for PERIOD*2;
         reset <= '0';
+        wait for PERIOD;
 
-        wait for 40 ns;
+        while not endfile(tb_file) loop
+            -- read inputs
+            readline(tb_file, tb_line);
+            read(tb_line, sensib_v);
+            sensib <= sensib_v;
 
-        button <= "00000100";
+            button <= "00000000";
+            wait for PERIOD*2;
+            wait until falling_edge(clock);
 
-        wait for 50 ns;
+            for i in 1 to 32 loop
+            read(tb_line, space);
+            read(tb_line, button_v);
+            read(tb_line, space);
+            read(tb_line, cmd_v);
+            
+            button <= button_v;
+            wait until rising_edge(clock);
+            wait for PERIOD*3/4;
 
-        button <= "00000101";
+            assert cmd = cmd_v
+                report "Test " &integer'image(counter) & ": Failed with sensibility "&
+                integer'image(to_integer(unsigned(sensib))) &" on iteration number "&
+                integer'image(i)
+                severity failure;
+            
+
+            end loop;
+
+            report "Test " &integer'image(counter) & ": SUCCESS";
+            counter := counter + 1;
+        end loop;
 
         finished <= true;
         report "EOT";
