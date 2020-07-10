@@ -2,7 +2,7 @@
 --! @file turbo_tb.vhd
 --! @brief Testbench for Turbo Controller
 --! @author Lucas Schneider (lucastrschneider@usp.br)
---! @date 2020/06/20
+--! @date 2020/07/10
 --------------------------------------------------------------------------------
 
 library ieee;
@@ -37,11 +37,8 @@ begin
         file tb_file : text open read_mode is "EP3/turbo_tb.dat";
         variable tb_line: line;
         variable space: character;
---        variable sensib_v : bit_vector(3 downto 0);
---        variable button_v, cmd_v : bit_vector(7 downto 0);
 
         type word_array is array (natural range <>) of bit_vector(7 downto 0);
-
         type pattern_t is record
             sensib : bit_vector(3 downto 0);
             button : word_array (0 to 31);
@@ -50,6 +47,7 @@ begin
         variable pattern : pattern_t;
 
         variable counter : integer := 1;
+
     begin
         report "BOT";
         finished <= false;
@@ -77,11 +75,6 @@ begin
                 read(tb_line, space);
             end loop;
 
---            for i in pattern.button'RANGE loop
---                report integer'image(to_integer(unsigned(pattern.cmd(i))));
---            end loop;
-
-
             sensib <= pattern.sensib;
             button <= "00000000";
             wait for PERIOD*2;
@@ -101,7 +94,7 @@ begin
             
             end loop;
 
-            report "Test " &integer'image(counter) & ": SUCCESS";
+--            report "Test " &integer'image(counter) & ": SUCCESS";
             counter := counter + 1;
         end loop;
 
