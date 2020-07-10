@@ -7,3 +7,6 @@ CPNT_LIST := alu
 
 # Name of the component to be tested
 CPNT ?= alu
+
+# Commands to prepare test files
+PREPARE_TEST :=

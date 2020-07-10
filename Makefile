@@ -78,6 +78,9 @@ $(WORK_DIR):
 print:
 	@echo $(CPNT_LIST) "\n"$(CPNT_TARGETS) "\n"$(TB_TARGETS)
 
+prepare:
+	$(AT)$(PREPARE_TEST)
+
 # Tests
 test: | $(WORK_DIR)
 	$(AT)$(GHDL) -r $(GHDL_FLAGS) $(CPNT)_tb --vcd=$(WORK_DIR)/$(CPNT)_test.vcd

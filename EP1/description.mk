@@ -7,3 +7,6 @@ CPNT_LIST := resto
 
 # Name of the component to be tested
 CPNT ?= resto
+
+# Commands to prepare test files
+PREPARE_TEST :=
