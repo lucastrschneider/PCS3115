@@ -1,4 +1,4 @@
-TEST_PER_SENSIB = 50
+TEST_PER_SENSIB = 100
 WORDS_PER_TEST = 32
 
 def print_data(sensib, dataInput, dataOutput):
@@ -14,12 +14,19 @@ def print_data(sensib, dataInput, dataOutput):
         out_output += "{0:008b}".format(dataOutput[i]) + " "
     print(out_output)
 
+def remap(old_value, old_min, old_max, new_min, new_max):
+    new_value = (float)(old_value - old_min) * (float)(new_max - new_min)
+    new_value /= (float)(old_max - old_min)
+    new_value += (float)(new_min)
+    return new_value
+
 import random
 
 for i in range(0,4):
     sensib = int(pow(2,i))
     
-    for test_numbers in range (0, TEST_PER_SENSIB):
+    for test_number in range (0, TEST_PER_SENSIB):
+        changing_rate = int(remap(test_number, 0, TEST_PER_SENSIB - 1, 0, sensib + 2))
         dataInput = []
         dataOutput = []
         value = random.randint(0, 255)
@@ -28,7 +35,7 @@ for i in range(0,4):
         counter = 0
 
         for j in range (1, WORDS_PER_TEST):
-            keep = random.randint(0,sensib+2)
+            keep = random.randint(0,changing_rate)
 
             if (keep == 0):
                 value_aux = random.randint(0, 254)
