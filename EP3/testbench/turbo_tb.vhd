@@ -37,9 +37,19 @@ begin
         file tb_file : text open read_mode is "EP3/turbo_tb.dat";
         variable tb_line: line;
         variable space: character;
-        variable sensib_v : bit_vector(3 downto 0);
-        variable button_v, cmd_v : bit_vector(7 downto 0);
-        variable counter : integer := 0;
+--        variable sensib_v : bit_vector(3 downto 0);
+--        variable button_v, cmd_v : bit_vector(7 downto 0);
+
+        type word_array is array (natural range <>) of bit_vector(7 downto 0);
+
+        type pattern_t is record
+            sensib : bit_vector(3 downto 0);
+            button : word_array (0 to 31);
+            cmd : word_array (0 to 31);
+        end record;
+        variable pattern : pattern_t;
+
+        variable counter : integer := 1;
     begin
         report "BOT";
         finished <= false;
@@ -53,30 +63,42 @@ begin
         while not endfile(tb_file) loop
             -- read inputs
             readline(tb_file, tb_line);
-            read(tb_line, sensib_v);
-            sensib <= sensib_v;
+            read(tb_line, pattern.sensib);
 
+            readline(tb_file, tb_line);
+            for i in pattern.button'RANGE loop
+                read(tb_line, pattern.button(i));
+                read(tb_line, space);
+            end loop;
+
+            readline(tb_file, tb_line);
+            for i in pattern.cmd'RANGE loop
+                read(tb_line, pattern.cmd(i));
+                read(tb_line, space);
+            end loop;
+
+--            for i in pattern.button'RANGE loop
+--                report integer'image(to_integer(unsigned(pattern.cmd(i))));
+--            end loop;
+
+
+            sensib <= pattern.sensib;
             button <= "00000000";
             wait for PERIOD*2;
             wait until falling_edge(clock);
 
-            for i in 1 to 32 loop
-            read(tb_line, space);
-            read(tb_line, button_v);
-            read(tb_line, space);
-            read(tb_line, cmd_v);
-            
-            button <= button_v;
-            wait until rising_edge(clock);
-            wait for PERIOD*3/4;
+            for i in pattern.button'RANGE loop
+                button <= pattern.button(i);
+                wait until rising_edge(clock);
+                wait for PERIOD*3/4;
 
-            assert cmd = cmd_v
-                report "Test " &integer'image(counter) & ": Failed with sensibility "&
-                integer'image(to_integer(unsigned(sensib))) &" on iteration number "&
-                integer'image(i)
-                severity failure;
+                assert unsigned(cmd) = unsigned(pattern.cmd(i))
+                    report "Test " &integer'image(counter) & ": Failed with sensibility "&
+                    integer'image(to_integer(unsigned(sensib))) &" on iteration number "&
+                    integer'image(i)
+                    &"   Received: "&integer'image(to_integer(unsigned(cmd))) &" Exepcted: "&integer'image(to_integer(unsigned(pattern.cmd(i))))
+                    severity failure;
             
-
             end loop;
 
             report "Test " &integer'image(counter) & ": SUCCESS";

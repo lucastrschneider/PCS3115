@@ -1,14 +1,18 @@
-TEST_PER_SENSIB = 10
+TEST_PER_SENSIB = 50
 WORDS_PER_TEST = 32
 
 def print_data(sensib, dataInput, dataOutput):
-    out = "{0:004b}".format(sensib)
+    print ("{0:004b}".format(sensib))
 
+    out_input = ""
     for i in range (0, WORDS_PER_TEST):
-        out += " " + "{0:008b}".format(dataInput[i])
-        out += " " + "{0:008b}".format(dataOutput[i])
+        out_input += "{0:008b}".format(dataInput[i]) + " "
+    print(out_input)
     
-    print out
+    out_output = ""
+    for i in range (0, WORDS_PER_TEST):
+        out_output += "{0:008b}".format(dataOutput[i]) + " "
+    print(out_output)
 
 import random
 
@@ -27,9 +31,15 @@ for i in range(0,4):
             keep = random.randint(0,sensib+2)
 
             if (keep == 0):
-                value = random.randint(0, 255)
+                value_aux = random.randint(0, 254)
+                if (value_aux >= value):
+                    value = value_aux + 1
+                else:
+                    value = value_aux
+                    
                 dataOutput.append(value)
                 counter = 0
+                
             else:
                 if (counter < sensib):
                     dataOutput.append(0)
